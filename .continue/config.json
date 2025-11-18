@@ -1,0 +1,27 @@
+{
+  "models": [
+    {
+      "title": "Grok Code Fast 1",
+      "provider": "openai",
+      "model": "grok-code-fast-1",
+      "apiKey": "your-xai-api-key-here",
+      "apiBase": "https://api.x.ai/v1",
+      "completionOptions": {
+        "temperature": 0.1,
+        "maxTokens": 8192
+      }
+    }
+  ],
+  "tabAutocompleteModel": {
+    "title": "Grok Code Fast 1",
+    "provider": "openai",
+    "model": "grok-code-fast-1",
+    "apiBase": "https://api.x.ai/v1"
+  },
+  "allowAnonymousTelemetry": false,
+  "slashCommands": [
+    { "name": "edit", "description": "Edit code" },
+    { "name": "cmd", "description": "Run terminal command" },
+    { "name": "commit", "description": "Git commit" }
+  ]
+}
