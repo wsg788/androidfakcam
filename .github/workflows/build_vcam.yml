@@ -1,9 +1,7 @@
-"name: Build VCam
+name: Build VCam
 
 on:
   workflow_dispatch:  # Manual trigger
-  push:
-    branches: [main]
 
 jobs:
   build:
@@ -31,8 +29,8 @@ jobs:
 
     - name: Set up NDK
       run: |
-        echo \"y\" | $ANDROID_HOME/tools/bin/sdkmanager --install 'ndk;25.1.8937393'
-        echo \"ANDROID_NDK_HOME=$ANDROID_HOME/ndk/25.1.8937393\" >> $GITHUB_ENV
+        echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'ndk;25.1.8937393'
+        echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/25.1.8937393" >> $GITHUB_ENV
 
     - name: Build Zygisk SO
       run: |
@@ -52,4 +50,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: magisk_module_built
-        path: magisk_module_built.zip"
+        path: magisk_module_built.zip
