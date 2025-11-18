@@ -41,13 +41,13 @@ jobs:
         zip -r ../magisk_module_built.zip .
 
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: vcam_controller_built
         path: vcam_controller_built.apk
 
     - name: Upload Magisk Module
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: magisk_module_built
         path: magisk_module_built.zip
