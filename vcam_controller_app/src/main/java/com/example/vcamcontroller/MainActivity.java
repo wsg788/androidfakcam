@@ -6,10 +6,14 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.MediaStore;
+import android.view.TextureView;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -25,7 +29,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TextureView.SurfaceTextureListener {
 
     private static final int REQUEST_CODE_PERMISSIONS = 100;
     private static final int REQUEST_CODE_VIDEO_PICK = 101;
@@ -34,10 +38,14 @@ public class MainActivity extends AppCompatActivity {
     private Switch switchEnableSpoof;
     private Button buttonSelectVideo;
     private Button buttonSelectImage;
+    private Button buttonSettings;
     private TextView textViewStatus;
+    private TextureView textureView;  // For live preview
     private SharedPreferences prefs;
     private MediaService mediaService;
     private boolean bound = false;
+    private Camera camera;  // Real camera for preview
+    private Handler handler = new Handler();
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -64,7 +72,10 @@ public class MainActivity extends AppCompatActivity {
         switchEnableSpoof = findViewById(R.id.switch_enable_spoof);
         buttonSelectVideo = findViewById(R.id.button_select_video);
         buttonSelectImage = findViewById(R.id.button_select_image);
+        buttonSettings = findViewById(R.id.button_settings);
         textViewStatus = findViewById(R.id.text_view_status);
+        textureView = findViewById(R.id.texture_view_preview);
+        textureView.setSurfaceTextureListener(this);
 
         // Bind to service
         Intent intent = new Intent(this, MediaService.class);
@@ -96,6 +107,11 @@ public class MainActivity extends AppCompatActivity {
             Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(pickIntent, REQUEST_CODE_IMAGE_PICK);
         });
+
+        buttonSettings.setOnClickListener(v -> {
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
+        });
     }
 
     @Override
@@ -105,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             unbindService(connection);
             bound = false;
         }
+        releaseCamera();
     }
 
     private void updateStatus() {
@@ -130,6 +147,8 @@ public class MainActivity extends AppCompatActivity {
             if (!allPermissionsGranted()) {
                 Toast.makeText(this, "Permissions required for VCam to work", Toast.LENGTH_SHORT).show();
                 finish();
+            } else {
+                openCamera();  // Open real camera for preview
             }
         }
     }
@@ -167,6 +186,42 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error copying file: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+    }
+
+    // TextureView callbacks for live preview
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        openCamera();
+    }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {}
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        releaseCamera();
+        return true;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {}
+
+    private void openCamera() {
+        try {
+            camera = Camera.open();  // Open default camera
+            camera.setPreviewTexture(textureView.getSurfaceTexture());
+            camera.startPreview();
+        } catch (Exception e) {
+            Toast.makeText(this, "Camera error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void releaseCamera() {
+        if (camera != null) {
+            camera.stopPreview();
+            camera.release();
+            camera = null;
         }
     }
 }

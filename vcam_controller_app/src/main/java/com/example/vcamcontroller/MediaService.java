@@ -9,6 +9,8 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class MediaService extends Service {
 
@@ -39,7 +41,7 @@ public class MediaService extends Service {
 
     public void setSpoofEnabled(boolean enabled) {
         prefs.edit().putBoolean("spoof_enabled", enabled).apply();
-        // TODO: Notify Magisk module
+        notifyModule(enabled);
     }
 
     public String getVideoPath() {
@@ -52,11 +54,33 @@ public class MediaService extends Service {
 
     public void setVideoPath(String path) {
         prefs.edit().putString("video_path", path).apply();
-        // Copy to module directory
+        notifyModulePath("video", path);
     }
 
     public void setImagePath(String path) {
         prefs.edit().putString("image_path", path).apply();
-        // Copy to module directory
+        notifyModulePath("image", path);
+    }
+
+    private void notifyModule(boolean enabled) {
+        try {
+            File statusFile = new File("/data/local/tmp/vcam_status.txt");
+            FileWriter writer = new FileWriter(statusFile);
+            writer.write("enabled=" + enabled + "\n");
+            writer.close();
+        } catch (IOException e) {
+            // Handle error
+        }
+    }
+
+    private void notifyModulePath(String type, String path) {
+        try {
+            File pathFile = new File("/data/local/tmp/vcam_paths.txt");
+            FileWriter writer = new FileWriter(pathFile, true);  // Append
+            writer.write(type + "=" + path + "\n");
+            writer.close();
+        } catch (IOException e) {
+            // Handle error
+        }
     }
 }
