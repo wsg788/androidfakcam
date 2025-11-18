@@ -1,0 +1,4 @@
+# System properties for Virtual Camera Spoofer
+# Add any necessary system property overrides here
+# Example: camera permissions or optimizations
+# Note: Zygisk handles most hooking, so minimal props needed

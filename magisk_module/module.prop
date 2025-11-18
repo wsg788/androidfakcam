@@ -1,0 +1,7 @@
+id=vcam_zygisk
+name=Virtual Camera Spoofer (Zygisk)
+version=v1.0.0
+versionCode=10000
+author=AI Assistant
+description=Systemless virtual camera module controlled by APK. Spoofs camera input with videos/images.
+minMagisk=23000

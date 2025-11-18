@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <CheckBox
+        android:id="@+id/checkbox_no_toast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Disable Toasts" />
+
+    <CheckBox
+        android:id="@+id/checkbox_no_silent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enable Video Audio" />
+
+    <CheckBox
+        android:id="@+id/checkbox_private_dir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Use Private Directory" />
+
+    <EditText
+        android:id="@+id/edit_video_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Video Path" />
+
+    <EditText
+        android:id="@+id/edit_image_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Image Path" />
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save" />
+
+</LinearLayout>
