@@ -19,6 +19,11 @@ jobs:
     - name: Set up Android SDK
       uses: android-actions/setup-android@v2
 
+    - name: Extract Sources
+      run: |
+        unzip vcam_controller_app.zip -d vcam_controller_app
+        unzip magisk_module.zip -d magisk_module
+
     - name: Build APK
       run: |
         cd vcam_controller_app
